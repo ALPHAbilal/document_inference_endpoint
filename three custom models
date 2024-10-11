@@ -19,21 +19,14 @@ document_analysis_client = DocumentAnalysisClient(
 )
 
 @app.post("/analyze_document")
-async def analyze_document(file: UploadFile = File(...), document_type: str = Form(...)):
+async def analyze_document(file: UploadFile = File(...)):
     try:
         contents = await file.read()
         
-        # Determine which model to use based on document_type
-        if document_type == "invoice":
-            model_id = "invoices-1.1.0"  # Use your latest invoice model ID
-        elif document_type == "business_card":
-            model_id = "business_cards-1.1.0"
-        elif document_type == "receipt":
-            model_id = "receipts-1.1.0"
-        else:
-            raise HTTPException(status_code=400, detail=f"Unsupported document type: {document_type}")
+        # Use the compose model
+        model_id = "FatherModel"  # Your compose model ID
 
-        # Analyze the document using the specified model
+        # Analyze the document using the compose model
         poller = document_analysis_client.begin_analyze_document(
             model_id=model_id, document=contents
         )
